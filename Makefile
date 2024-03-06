@@ -1,11 +1,13 @@
 .DEFAULT_GOAL := release
 
-GO 						?= go
+GO 				?= go
 GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
-GO_TEST 			?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
 GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
 GO_BENCHSTAT 	?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
-GO_MOD 				?= $(shell ${GO} list -m)
+GO_MOD 			?= $(shell ${GO} list -m)
+
+API_DIR 		?= apis
 
 .PHONY: release
 release: ## Release the project.
@@ -13,10 +15,8 @@ release: ## Release the project.
 
 .PHONY: generate
 generate: ## Generate code.
-	$(GO) generate ./...
 	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.models.yml ./apis/now_table_api_latest_spec.yaml
 	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.client.yml ./apis/now_table_api_latest_spec.yaml
-	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.server.yml ./apis/now_table_api_latest_spec.yaml
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

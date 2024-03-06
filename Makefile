@@ -14,6 +14,9 @@ release: ## Release the project.
 .PHONY: generate
 generate: ## Generate code.
 	$(GO) generate ./...
+	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.models.yml ./apis/now_table_api_latest_spec.yaml
+	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.client.yml ./apis/now_table_api_latest_spec.yaml
+	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.server.yml ./apis/now_table_api_latest_spec.yaml
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.

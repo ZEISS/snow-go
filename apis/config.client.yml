@@ -1,0 +1,6 @@
+package: apis
+generate:
+  client: true
+output: apis/client.gen.go
+output-options:
+  skip-prune: true

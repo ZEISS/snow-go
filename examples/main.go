@@ -2,15 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"io"
 	"log"
 	"os"
 
 	"github.com/deepmap/oapi-codegen/pkg/securityprovider"
 	"github.com/spf13/cobra"
 	snowgo "github.com/zeiss/snow-go"
-	"github.com/zeiss/snow-go/apis"
 )
 
 // Config ...
@@ -48,23 +45,15 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	client, err := snowgo.New(cfg.Flags.URL, apis.WithRequestEditorFn(basicAuuth.Intercept))
+	client := snowgo.New(cfg.Flags.URL, snowgo.WithRequestEditorFn(basicAuuth.Intercept))
 	if err != nil {
 		return err
 	}
 
-	res, err := client.GetApiNowTableTableName(ctx, "ecc_event", &apis.GetApiNowTableTableNameParams{})
+	err = client.Do(ctx, nil, nil)
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
-
-	b, err := io.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(string(b))
 
 	return nil
 }

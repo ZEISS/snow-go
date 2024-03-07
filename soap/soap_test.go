@@ -3,6 +3,8 @@ package soap_test
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
+	"io"
 	"testing"
 
 	"github.com/zeiss/snow-go/soap"
@@ -74,6 +76,50 @@ func TestFault(t *testing.T) {
 			require.NoError(t, err)
 
 			assert.Equal(t, tt.out, f)
+		})
+	}
+}
+
+func TestRequest_Marshal(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name   string
+		url    soap.SOAPUrl
+		action soap.SOAPAction
+		body   interface{}
+		fault  interface{}
+	}{
+		{
+			name:   "nil body",
+			url:    soap.SOAPUrl("https://example.com"),
+			action: soap.Get,
+			body:   nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			r := soap.NewRequest(tt.url, tt.action, tt.body, tt.fault)
+
+			req, err := r.Marshal()
+			require.NoError(t, err)
+
+			assert.Equal(t, tt.action.String(), req.Header.Get("Soapaction"))
+			assert.Equal(t, "POST", req.Method)
+
+			env := soap.NewEnvelope(tt.body)
+			buf, err := xml.Marshal(env)
+			require.NoError(t, err)
+
+			b, err := io.ReadAll(req.Body)
+			require.NoError(t, err)
+
+			fmt.Println(string(b))
+
+			assert.Equal(t, buf, b)
 		})
 	}
 }

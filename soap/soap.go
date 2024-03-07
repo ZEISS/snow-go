@@ -55,6 +55,10 @@ func (f *SOAPFault) Error() string {
 }
 
 // NewEnvelope creates a new SOAP envelope.
-func NewEnvelope() *SOAPEnvelope {
-	return &SOAPEnvelope{}
+func NewEnvelope(body interface{}) *SOAPEnvelope {
+	return &SOAPEnvelope{
+		Body: &SOAPBody{
+			Content: body,
+		},
+	}
 }

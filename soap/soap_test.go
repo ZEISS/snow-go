@@ -11,13 +11,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUnmarshalXML(t *testing.T) {
+func TestFault(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name string
 		in   string
-		out  *soap.Fault
+		out  *soap.SOAPEnvelope
 	}{
 		{
 			name: "fault",
@@ -31,10 +31,34 @@ func TestUnmarshalXML(t *testing.T) {
 				</SOAP-ENV:Fault>
 			</SOAP-ENV:Body>
 		</SOAP-ENV:Envelope>`,
-			out: &soap.Fault{
-				Code:   "SOAP-ENV:Server",
-				String: "Unable to parse SOAP document",
-				Detail: "Error completing SOAP request",
+			out: &soap.SOAPEnvelope{
+				XMLName: xml.Name{
+					Space: "http://schemas.xmlsoap.org/soap/envelope/",
+					Local: "Envelope",
+				},
+				XMLNSXsd: "",
+				XMLNSXsi: "",
+				Header: &soap.SOAPHeader{
+					XMLName: xml.Name{
+						Space: "http://schemas.xmlsoap.org/soap/envelope/",
+						Local: "Header",
+					},
+				},
+				Body: &soap.SOAPBody{
+					XMLName: xml.Name{
+						Space: "http://schemas.xmlsoap.org/soap/envelope/",
+						Local: "Body",
+					},
+					Fault: &soap.SOAPFault{
+						XMLName: xml.Name{
+							Space: "http://schemas.xmlsoap.org/soap/envelope/",
+							Local: "Fault",
+						},
+						Code:   "SOAP-ENV:Server",
+						String: "Unable to parse SOAP document",
+						Detail: "Error completing SOAP request",
+					},
+				},
 			},
 		},
 	}
@@ -43,7 +67,7 @@ func TestUnmarshalXML(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			f := soap.NewFault()
+			f := &soap.SOAPEnvelope{}
 
 			dec := xml.NewDecoder(bytes.NewBufferString(tt.in))
 			err := dec.Decode(f)

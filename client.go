@@ -49,7 +49,7 @@ func WithRequestEditorFn(fn ...RequestEditorFn) Opt {
 	}
 }
 
-// New returns a new ServiceNow SOAP API client
+// New returns a new ServiceNow client
 func New(server string, opts ...Opt) *Client {
 	c := &Client{
 		http:   http.DefaultClient,
@@ -74,10 +74,19 @@ func (c *Client) Do(ctx context.Context, req Request, resp Response) error {
 		return err
 	}
 
+	for _, fn := range c.requestEditorFn {
+		err := fn(ctx, httpReq)
+		if err != nil {
+			return err
+		}
+	}
+
 	httpResp, err := c.http.Do(httpReq.WithContext(ctx))
 	if err != nil {
 		return err
 	}
+
+	err = resp.Unmarshal(httpResp)
 
 	_, err = io.Copy(io.Discard, httpResp.Body)
 	if err != nil {
@@ -85,5 +94,5 @@ func (c *Client) Do(ctx context.Context, req Request, resp Response) error {
 	}
 	defer httpResp.Body.Close()
 
-	return resp.Unmarshal(httpResp)
+	return nil
 }

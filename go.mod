@@ -6,7 +6,7 @@ require (
 	github.com/cloudevents/sdk-go/v2 v2.15.2
 	github.com/getkin/kin-openapi v0.123.0
 	github.com/oapi-codegen/runtime v1.1.1
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 )
 

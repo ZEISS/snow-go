@@ -1,30 +1,34 @@
-.DEFAULT_GOAL := release
+.DEFAULT_GOAL := build
 
-GO 				?= go
-GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
-GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
-GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
-GO_BENCHSTAT 	?= $(GO_RUN_TOOLS) golang.org/x/perf/cmd/benchstat
-GO_MOD 			?= $(shell ${GO} list -m)
-
-API_DIR 		?= apis
+GO 							?= go
+GO_RUN_TOOLS 		?= $(GO) run -modfile ./tools/go.mod
+GO_TEST 				?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
+GO_RELEASER 		?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
+GO_MOD					?= $(shell ${GO} list -m)
 
 .PHONY: release
 release: ## Release the project.
 	$(GO_RELEASER) release --clean
 
+.PHONY: build
+build: ## Build the binary file.
+	$(GO_RELEASER) build --snapshot --clean
+
 .PHONY: generate
 generate: ## Generate code.
-	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.models.yml ./apis/now_table_api_latest_spec.yaml
-	$(GO_RUN_TOOLS) github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen -config ./apis/config.client.yml ./apis/now_table_api_latest_spec.yaml
+	$(GO) generate ./...
+
+.PHONY: mocks
+mocks: ## Generate mocks.
+	$(GO_RUN_TOOLS) github.com/vektra/mockery/v2
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
 	$(GO_RUN_TOOLS) mvdan.cc/gofumpt -w .
 
-.PHONY: bench
-bench: ## Run benchmarks.
-	$(GO) test -bench=. ./...
+.PHONY: start
+start: ## Run air live reload.
+	$(GO_RUN_TOOLS) github.com/air-verse/air
 
 .PHONY: vet
 vet: ## Run go vet against code.

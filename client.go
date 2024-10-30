@@ -87,6 +87,9 @@ func (c *Client) Do(ctx context.Context, req Request, resp Response) error {
 	}
 
 	err = resp.Unmarshal(httpResp)
+	if err != nil {
+		return err
+	}
 
 	_, err = io.Copy(io.Discard, httpResp.Body)
 	if err != nil {

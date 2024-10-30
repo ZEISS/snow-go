@@ -17,9 +17,6 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/go:1": {}
   },
-  "forwardPorts": [
-    3000
-  ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -28,12 +25,6 @@
         "golang.go",
         "ms-vscode.makefile-tools"
       ]
-    }
-  },
-  "portsAttributes": {
-    "3000": {
-      "label": "Application",
-      "onAutoForward": "openPreview"
     }
   }
 }

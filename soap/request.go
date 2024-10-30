@@ -59,6 +59,7 @@ func (r *Request) Marshal() (*http.Request, error) {
 		return nil, err
 	}
 
+	// nolint:noctx
 	req, err := http.NewRequest("POST", r.url.String(), bytes.NewBuffer(buf))
 	if err != nil {
 		return nil, err

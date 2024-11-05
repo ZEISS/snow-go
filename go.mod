@@ -1,6 +1,6 @@
 module github.com/zeiss/snow-go
 
-go 1.22.1
+go 1.23
 
 require (
 	github.com/cloudevents/sdk-go/v2 v2.15.2

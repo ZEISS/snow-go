@@ -1,9 +1,9 @@
 module github.com/zeiss/snow-go
 
-go 1.23
+go 1.23.0
 
 require (
-	github.com/cloudevents/sdk-go/v2 v2.16.0
+	github.com/cloudevents/sdk-go/v2 v2.16.1
 	github.com/getkin/kin-openapi v0.132.0
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/spf13/cobra v1.9.1

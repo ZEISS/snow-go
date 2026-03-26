@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/cloudevents/sdk-go/v2 v2.16.2
 	github.com/getkin/kin-openapi v0.134.0
-	github.com/oapi-codegen/runtime v1.3.0
+	github.com/oapi-codegen/runtime v1.3.1
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 )

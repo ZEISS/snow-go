@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/cloudevents/sdk-go/v2 v2.16.2
-	github.com/getkin/kin-openapi v0.145.0
+	github.com/getkin/kin-openapi v0.146.0
 	github.com/oapi-codegen/runtime v1.6.0
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
